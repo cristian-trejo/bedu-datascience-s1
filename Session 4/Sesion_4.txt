@@ -1,0 +1,95 @@
+# ****** Sesion 04: Fundamentos de MongoDB ****** #
+
+# ****** Reto - 01: Colecciones, Documentos y Proyecciones ****** #
+Desarrollo: Usando la base de datos sample_mflix, proyecta los datos que se solicitan.
+
+1 - Fecha, nombre y texto de cada comentario.
+
+{
+ project: {
+  _id: 0,
+  date: 1,
+  name: 1,
+  text: 1
+ }
+}
+
+2 - Título, elenco y año de cada película.
+
+{
+ project: {
+  _id: 0,
+  title: 1,
+  cast: 1,
+  year: 1
+ }
+}
+
+3- Nombre y contraseña de cada usuario.
+
+{
+ project: {
+  _id: 0,
+  name: 1,
+  password: 1
+ }
+}
+
+# ****** Reto - 02: Filtros básicos ****** #
+Desarrollo: Usando la base de datos sample_mflix, agrega proyeccciones, filtros, ordenamientos y límites que permitan contestar las siguientes preguntas.
+
+1 - ¿Qué comentarios ha hecho Greg Powell?
+
+{
+ filter: {
+  name: 'Greg Powell'
+ },
+ project: {
+  _id: 0
+ }
+} 
+
+2 - ¿Qué comentarios han hecho Greg Powell o Mercedes Tyler?
+
+{
+ filter: {
+  $or: [
+   {
+    name: 'Greg Powell'
+   },
+   {
+    name: 'Mercedes Tyler'
+   }
+  ]
+ },
+ project: {
+  _id: 0
+ }
+}
+
+3 - ¿Cuál es el máximo número de comentarios en una película?
+
+{
+ project: {
+  _id: 1,
+  num_mflix_comments: 1
+ },
+ sort: {
+  num_mflix_comments: -1
+ },
+ limit: 1
+}
+
+4 - ¿Cuál es título de las cinco películas más comentadas?
+
+{
+ project: {
+  _id: 0,
+  title: 1,
+  num_mflix_comments: 1
+ },
+ sort: {
+  num_mflix_comments: -1
+ },
+ limit: 10
+}

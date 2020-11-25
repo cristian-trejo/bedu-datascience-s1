@@ -1,0 +1,41 @@
+# ****** Ejercicios Sesion 06 ****** #
+/* Desarrolllo:
+    Continuaremos trabajando con la base de datos de películas y sus comentarios.
+*/
+
+El proyecto consiste en obtener, por país, el número de películas que hay de cada género. Un ejemplo de salida en formato de tabla sería:
+    pais::genero::peliculas
+    USA::Short::10
+    USA::Drama::20
+
+[
+    {$unwind: 
+    {
+        path: '$countries',
+        preserveNullAndEmptyArrays: true
+    }}, 
+    
+    {$unwind: 
+    {
+        path: '$genres',
+        preserveNullAndEmptyArrays: true
+    }}, 
+    {$group: 
+    {
+        _id: {country: '$countries', genre: '$genres'},
+        count: {$sum:1}
+    }}, 
+    {$set: 
+    {
+        country: '$_id.country',
+        genre: '$_id.genre'
+    }}, 
+    {$project: 
+    {
+        _id: 0,
+        country: 1,
+        genre: 1,
+        count: 1
+    }}
+]
+

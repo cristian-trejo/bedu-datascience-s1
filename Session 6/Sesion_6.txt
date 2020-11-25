@@ -1,0 +1,54 @@
+# ****** Sesion 06: Agregaciones ****** #
+
+# ****** Reto 1: Agrupamientos ****** #
+Con base en el ejemplo 1, modifica el agrupamiento para que muestre el costo promedio por habitación por país de las propiedades de tipo casa.
+
+[{$match: {
+  property_type: 'House',
+  bedrooms: 
+  {
+    $gte: 1
+  }
+}}, {$addFields: {
+  price_bedroom: 
+  {
+    $divide: [ "$price", "$bedrooms" ]
+  }
+}}, {$group: {
+  _id: "$address.country",
+  average_price_bedroom: 
+  {
+    $avg: "$price_bedroom"
+  },
+  count:
+  {
+    $sum: 1
+  }
+}}]
+
+# ****** Reto 2: Asociación de colecciones ****** #
+Usando las colecciones comments y users, se requiere conocer el correo y contraseña de cada persona que realizó un comentario. Construye un pipeline que genere como resultado estos datos.
+
+[{$lookup: {
+  from: 'users',
+  localField: 'name',
+  foreignField: 'name',
+  as: 'usuario'
+}}, {$addFields: {
+  obj_user:
+  {
+    $arrayElemAt: [ "$usuario", 0] 
+  }
+}}, {$addFields: {
+  password: "$obj_user.password"
+}}, {$project: {
+  _id: 0,
+  name: 1,
+  email: 1,
+  password: 1
+}}]
+
+
+# ****** Reto 3: Generación de vistas ****** #
+Usando el pipeline que generaste en el Reto 2, genera la vista correspondiente.
+Para finalizar, elimina todas las vistas que generaste durante esta sesión.

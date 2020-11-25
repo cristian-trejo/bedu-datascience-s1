@@ -1,0 +1,79 @@
+# ****** Sesion 05: Consultas en MongoDB ****** #
+
+# ****** Reto - 01: Expresiones regulares ****** #
+Desarrollo: Usando la base de datos sample_airbnblistingsAndReviews, realiza los siguientes filtros:
+
+1.1 - Propiedades que no permitan fiestas.
+{
+ filter: {
+  house_rules: RegExp('No Parties', i)
+ }
+}
+
+1.2 - Propiedades que admitan mascotas.
+{
+ filter: {
+  house_rules: RegExp('Pets Allowed', i)
+ }
+}
+
+1.3 - Propiedades que no permitan fumadores.
+{
+ filter: {
+  house_rules: RegExp('No Smoking', i)
+ }
+}
+
+1.4 - Propiedades que no permitan fiestas ni fumadores.
+{
+ filter: {
+  house_rules: RegExp('No Smoking|No Parties', i)
+ }
+}
+
+
+# ****** Reto - 02: Notación punto y arreglos ****** #
+Desarrollo: Usando la colección sample_airbnb.listingsAndReviews, 
+agrega un filtro que permita obtener todas las publicaciones que tengan 50 o más comentarios, que la valoración sea mayor o igual a 80, que cuenten con conexión a Internet vía cable y estén ubicada en Brazil.
+
+{
+ filter: {
+  number_of_reviews: {
+   $gte: 50
+  },
+  'review_scores.review_scores_rating': {
+   $gte: 80
+  },
+  amenities: {
+   $in: [
+    RegExp('Ethernet')
+   ]
+  },
+  'address.country': 'Brazil'
+ }
+}
+
+# ****** Reto - 03: Introducción a las agregaciones ****** #
+Desarrollo: Usando la colección sample_airbnb.listingsAndReviews,
+mediante el uso de agregaciones, encontrar el número de publicaciones que tienen conexión a Internet, sea desde Wifi o desde cable (Ethernet).
+
+[{$match: {
+ amenities: {$in: ["Wifi", "Ethernet"]}
+}
+}, {$group: {
+  _id: null,
+  total: 
+  {
+    $sum: 1
+  }
+}}]
+
+[{$match: {
+  amenities: { $in: [ "Internet", "Wifi", "Ethernet" ] }
+}}, {$group: {
+  _id: null,
+  num_publications: 
+  {
+    $sum: 1,
+  }
+}}]
